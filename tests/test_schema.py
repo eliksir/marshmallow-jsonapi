@@ -350,15 +350,16 @@ class TestCompoundDocuments:
 
     def test_include_data_load_without_schema_loads_only_ids(
             self, post):
-        class PostInnerSchemalessSchema(PostSchema):
+        class PostInnerSchemalessSchema(Schema):
+            id = fields.Str()
             comments = fields.Relationship(
                 'http://test.test/posts/{id}/comments/',
                 related_url_kwargs={'id': '<id>'},
                 load_from='post-comments', many=True, type_='comments'
             )
 
-            class Meta(PostSchema.Meta):
-                pass
+            class Meta:
+                type_ = 'posts'
 
         serialized = PostSchema(
             include_data=('author', 'post_comments')
